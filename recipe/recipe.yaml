@@ -9,14 +9,16 @@ package:
 source:
   url: https://github.com/bellard/quickjs/archive/${{ commit }}.tar.gz
   sha256: 0364fd5136857117c8204c2f0c203b71b25b9f025dc1a0605ea51f0fd7f92511
+  patches:
+    - cross-compile.patch
 
 build:
-  number: 0
+  number: 1
   skip:
     - win
   script:
     - make -j${CPU_COUNT} CC="${CC}" PREFIX="${PREFIX}"
-    - make test CC="${CC}"
+    - if [[ "${CONDA_BUILD_CROSS_COMPILATION:-0}" != "1" ]]; then make test CC="${CC}"; fi
     - make install PREFIX="${PREFIX}"
 
 requirements:
